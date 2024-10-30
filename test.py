@@ -1,11 +1,20 @@
 # Databricks notebook source
 import pandas as pd
+import configparser
+import os
 from datetime import datetime
 
-# file path
-inputPath = "/Workspace/Users/worrawuj@ais.co.th/track_small.csv"
-outputPath = "/Workspace/Users/worrawuj@ais.co.th/output_small.csv"
-testResultPath = "/Workspace/Users/worrawuj@ais.co.th/test_result.txt"
+# Get the parent path of the notebook
+notebook_path = dbutils.entry_point.getDbutils().notebook().getContext().notebookPath().get()
+parent_path = os.path.dirname('/Workspace' + notebook_path)
+os.chdir(parent_path)
+
+# read config file
+config = configparser.ConfigParser()
+config.read('./pipeline.conf')
+inputPath = config.get('DEFAULT', 'INPUT_PATH')
+outputPath = config.get('DEFAULT', 'OUTPUT_PATH')
+testResultPath = config.get('DEFAULT', 'TEST_RESULT_PATH')
 
 # read files
 tracksInput = pd.read_csv(inputPath)
